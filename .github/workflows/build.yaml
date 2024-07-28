@@ -1,0 +1,98 @@
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        target: [debian, binary]
+      fail-fast: false
+    name: Build for ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Init tools
+        uses: actions/checkout@v4.1.7
+      - name: Init Rust
+        shell: bash
+        run: curl https://sh.rustup.rs -sSf | sh -s -- -y
+      - name: Create Package (binary)
+        if: matrix.target == 'binary'
+        shell: bash
+        run: cargo build --release
+      - name: Create Package (debian)
+        if: matrix.target == 'debian'
+        shell: bash
+        run: |
+          cargo install cargo-deb
+          cargo deb
+      - name: Output the result (binary)
+        if: matrix.target == 'binary'
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: pbskids-dl-rs_$(( runner.arch ))
+          path: target/release/pbskids-dl
+          if-no-files-found: error
+      - name: Output the result (debian)
+        if: matrix.target == 'debian'
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: pbskids-dl-rs_$(( runner.arch )).deb
+          path: target/debian
+          if-no-files-found: error
+      - name: Update Nightly Release
+        uses: andelf/nightly-release@46e2d5f80828ecc5c2c3c819eb31186a7cf2156c
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: unstable
+          name: 'Unstable'
+          prerelease: true
+          body: 'Unstable release of pbskids-dl.rs for commit ${{ github.sha }}'
+          files: |
+            ./target/release/pbskids-dl
+            ./target/debian/pbskids-dl*.deb     
+#  test:
+#    strategy:
+#      matrix:
+#        target: [debian]
+#      fail-fast: false
+#    needs: build
+#    name: Test for ${{ matrix.target }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Init tools
+#        uses: actions/checkout@v4.1.7
+#        with:
+#         submodules: true # This line is only needed for building/testing a package, pretty much useless otherwise.
+#      - name: Download the result
+#        uses: actions/download-artifact@v4.1.8
+#      - name: Verify SHA256sum (debian)
+#        if: matrix.target == 'debian'
+#        shell: bash
+#        run: |
+#          cd $GITHUB_WORKSPACE
+#          mv ./pbskids-dl_debian.sha256sum ./pbskids-dl_debian.sha256sum.2
+#          cp ./pbskids-dl_debian.sha256sum.2/pbskids-dl.sha256sum ./pbskids-dl_debian.sha256sum
+#          mv ./pbskids-dl_debian.deb ./pbskids-dl_debian.deb.2
+#          cp ./pbskids-dl_debian.deb.2/pbskids-dl_debian.deb ./pbskids-dl_debian.deb
+#          cat ./pbskids-dl_debian.sha256sum | sha256sum --check
+#      - name: Install Packages (debian)
+#        if: matrix.target == 'debian'
+#        shell: bash
+#        run: |
+#          cd $GITHUB_WORKSPACE
+#          sudo apt-get update
+#          sudo apt-get install ./pbskids-dl_debian.deb -y
+#          python3 -m pip install -r requirements.txt
+#      - name: Test Build (debian)
+#        if: matrix.target == 'debian'
+#        shell: bash
+#        run: |
+#          cd ./.debian
+#          sudo chmod +x ./filetest.sh
+#          ./filetest.sh ./pbskidsdl_testers.txt
