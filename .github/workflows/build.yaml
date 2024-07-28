@@ -15,8 +15,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Init tools
-        uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.1.7
       - name: Init Rust
         shell: bash
         run: |
@@ -46,6 +45,12 @@ jobs:
           name: pbskids-dl-rs_${{ runner.arch }}.deb
           path: target/debian/pbskids-dl.rs_*-1_*.deb
           if-no-files-found: error
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4.1.7
+      - uses: actions/download-artifact@v4.1.8
       - name: Update Nightly Release
         uses: andelf/nightly-release@46e2d5f80828ecc5c2c3c819eb31186a7cf2156c
         env:
@@ -56,8 +61,7 @@ jobs:
           prerelease: true
           body: 'Unstable release of pbskids-dl.rs for commit ${{ github.sha }} (SAME ARCH FOR EVERY FILE)'
           files: |
-            ./target/release/pbskids-dl
-            ./target/debian/pbskids-dl*.deb
+            ./pbskids-dl-rs*
 #  test:
 #    strategy:
 #      matrix:
