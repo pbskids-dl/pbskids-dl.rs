@@ -34,6 +34,10 @@ section = "tools"
 priority = "optional"
 conflicts = "pbskids-dl"
 assets = [
-    ["target/release/pbskids-dl", "usr/bin/", "755"],
-    ["config.json", "usr/share/pbskids-dl/", "644"],
+    ["target/release/pbskids-dl", "usr/lib/pbskids-dl.rs/", "755"],
+    ["config.json", "usr/lib/pbskids-dl.rs/", "644"],
+]
+maintainer-scripts = [
+    "debian/postinst",
+    "debian/prerm",
 ]

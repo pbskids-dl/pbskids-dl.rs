@@ -1,0 +1,2 @@
+#!/usr/bin/bash
+update-alternatives --remove pbskids-dl /usr/lib/pbskids-dl.rs/pbskids-dl
