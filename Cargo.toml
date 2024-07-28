@@ -27,8 +27,6 @@ name = "pbskids-dl.rs"
 maintainer = "NexusSfan <nexussfan@duck.com>"
 copyright = "2024, pbskids-dl team"
 license-file = ["LICENSE", "11"]
-extended-description = """\
-A downloader for PBS KIDS videos."""
 depends = "$auto"
 section = "tools"
 priority = "optional"
