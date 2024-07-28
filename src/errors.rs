@@ -20,7 +20,7 @@
 //https://mariadb.com/kb/en/operating-system-error-codes/
 #[repr(u8)]
 pub(crate) enum LinuxExitCodes {
-    // SUCCESS = 0,   //no Error
+    SUCCESS = 0,   //no Error
     EIO = 5,       //I/O error
     EFAULT = 14,   //Bad address
     EINVAL = 22,   //Invalid argument
@@ -129,6 +129,12 @@ impl From<serde_json::Error> for AppError {
                 .map_or(LinuxExitCodes::UNKNOWN as u8, |err| err as u8),
             error_message: format!("Failed to parse. Error: {}", error.to_string()),
         }
+    }
+}
+
+impl From<AppError> for std::process::ExitCode {
+    fn from(error: AppError) -> Self {
+        std::process::ExitCode::from(error.error_code)
     }
 }
 
