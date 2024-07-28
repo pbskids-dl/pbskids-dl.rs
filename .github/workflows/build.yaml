@@ -19,7 +19,9 @@ jobs:
         uses: actions/checkout@v4.1.7
       - name: Init Rust
         shell: bash
-        run: curl https://sh.rustup.rs -sSf | sh -s -- -y
+        run: |
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
+          . "$HOME/.cargo/env"
       - name: Create Package (binary)
         if: matrix.target == 'binary'
         shell: bash
@@ -34,15 +36,15 @@ jobs:
         if: matrix.target == 'binary'
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: pbskids-dl-rs_$(( runner.arch ))
+          name: pbskids-dl-rs_${{ runner.arch }}
           path: target/release/pbskids-dl
           if-no-files-found: error
       - name: Output the result (debian)
         if: matrix.target == 'debian'
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: pbskids-dl-rs_$(( runner.arch )).deb
-          path: target/debian
+          name: pbskids-dl-rs_${{ runner.arch }}.deb
+          path: target/debian/pbskids-dl.rs_*-1_${{ runner.arch }}.deb
           if-no-files-found: error
       - name: Update Nightly Release
         uses: andelf/nightly-release@46e2d5f80828ecc5c2c3c819eb31186a7cf2156c
