@@ -23,7 +23,7 @@ jobs:
       - name: Create Package (binary)
         if: matrix.target == 'binary'
         shell: bash
-        run: cargo build --release
+        run: cargo build --release --verbose
       - name: Create Package (debian)
         if: matrix.target == 'debian'
         shell: bash
