@@ -61,7 +61,7 @@ jobs:
           prerelease: true
           body: 'Unstable release of pbskids-dl.rs for commit ${{ github.sha }} (SAME ARCH FOR EVERY FILE)'
           files: |
-            ./pbskids-dl-rs*
+            ./pbskids-dl-rs*/*
 #  test:
 #    strategy:
 #      matrix:
