@@ -1,12 +1,12 @@
 [package]
 name = "pbskids-dl"
-version = "3.2.1"
+version = "3.2.2"
 authors = ["pbskids-dl team"]
 description = "A downloader for PBS KIDS videos."
 license = "GPL-2.0-or-later"
-documentation = "https://github.com/pbskids-dl/pbskids-dl/wiki"
+documentation = "https://github.com/pbskids-dl/pbskids-dl.rs/tree/dev/docs"
 readme = "README.md"
-repository = "https://github.com/pbskids-dl/pbskids-dl"
+repository = "https://github.com/pbskids-dl/pbskids-dl.rs"
 edition = "2021"
 
 [dependencies]
@@ -30,10 +30,11 @@ license-file = ["LICENSE", "11"]
 depends = "$auto"
 section = "tools"
 priority = "optional"
+conflicts = "pbskids-dl"
 assets = [
-    ["target/release/pbskids-dl", "usr/lib/pbskids-dl.rs/", "755"],
+    ["target/release/pbskids-dl", "usr/bin/", "755"],
+    ["target/release/pbskids-dl", "usr/bin/pbskids-dl.rs", "755"],
     ["config.json", "usr/lib/pbskids-dl.rs/", "644"],
 ]
 extended-description = """\
 Rust version of pbskids-dl"""
-maintainer-scripts = "debian/"

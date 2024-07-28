@@ -1,2 +1,0 @@
-#!/usr/bin/bash
-update-alternatives --install /usr/bin/pbskids-dl pbskids-dl /usr/lib/pbskids-dl.rs/pbskids-dl 100
