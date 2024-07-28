@@ -23,7 +23,7 @@ mod assets;
 mod config;
 mod downloader;
 
-fn main() -> Result<(), u8> {
+fn main() -> std::process::ExitCode {
     let matches = args::cli_args();
 
     // safe to unwrap url entry b/c required and verified by clap
@@ -43,7 +43,7 @@ fn main() -> Result<(), u8> {
             if !quiet {
                 eprintln!("{}", error);
             };
-            return Err(error.error_code);
+            return error.into();
         }
     };
 
@@ -53,7 +53,7 @@ fn main() -> Result<(), u8> {
             if !quiet {
                 eprintln!("{}", error);
             };
-            return Err(error.error_code);
+            return error.into();
         }
     };
 
@@ -61,11 +61,15 @@ fn main() -> Result<(), u8> {
         println!("{}", save_filename);
     }
 
-    if let Err(error) = downloader::download_video(videos, config, save_filename) {
+    if let Err(error) = downloader::download_video(videos, config, save_filename, quiet) {
         if !quiet {
             eprintln!("{}", error);
         };
-        return Err(error.error_code);
+        return error.into();
     };
-    Ok(())
+
+    crate::errors::AppError{
+        error_code: crate::errors::LinuxExitCodes::SUCCESS as u8,
+        error_message: "OK".to_string(),
+    }.into()
 }

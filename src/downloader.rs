@@ -27,6 +27,7 @@ pub(crate) fn download_video(
     videos: Vec<serde_json::Value>,
     config: config::Config,
     save_filename: String,
+    quiet: bool,
 ) -> Result<(), crate::errors::AppError> {
     for video in videos.iter() {
         if video.get(&config.page_config.video_profile).unwrap()
@@ -56,7 +57,10 @@ pub(crate) fn download_video(
             let style = indicatif::ProgressStyle::default_bar()
                 .progress_chars(&config.download_config.progress_chars)
                 .template(&config.download_config.progress_template)?;
-            progress_bar.set_style(style);
+
+            if !quiet {
+                progress_bar.set_style(style);
+            }
 
             let file = std::fs::File::create(save_filename)?;
             let mut writer = std::io::BufWriter::new(file);
@@ -72,7 +76,9 @@ pub(crate) fn download_video(
 
                 writer.write_all(&buffer[..bytes_read])?;
                 downloaded += bytes_read as u64;
-                progress_bar.set_position(downloaded);
+                if !quiet {
+                    progress_bar.set_position(downloaded);
+                }
             }
             break;
         }
