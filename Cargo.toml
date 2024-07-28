@@ -1,6 +1,6 @@
 [package]
 name = "pbskids-dl"
-version = "3.2.0"
+version = "3.2.1"
 authors = ["pbskids-dl team"]
 description = "A downloader for PBS KIDS videos."
 license = "GPL-2.0-or-later"
