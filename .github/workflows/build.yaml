@@ -6,11 +6,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        target: [debian, binary]
-      fail-fast: false
-    name: Build for ${{ matrix.target }}
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.7
@@ -19,25 +15,18 @@ jobs:
         run: |
           curl https://sh.rustup.rs -sSf | sh -s -- -y
           . "$HOME/.cargo/env"
-      - name: Create Package (binary)
-        if: matrix.target == 'binary'
-        shell: bash
-        run: cargo build --release --verbose
-      - name: Create Package (debian)
-        if: matrix.target == 'debian'
+      - name: Create Package
         shell: bash
         run: |
           cargo install cargo-deb
           cargo deb
-      - name: Output the result (binary)
-        if: matrix.target == 'binary'
+      - name: Output the binary
         uses: actions/upload-artifact@v4.3.4
         with:
           name: pbskids-dl-rs_${{ runner.arch }}
           path: target/release/pbskids-dl
           if-no-files-found: error
-      - name: Output the result (debian)
-        if: matrix.target == 'debian'
+      - name: Output the debian package
         uses: actions/upload-artifact@v4.3.4
         with:
           name: pbskids-dl-rs_${{ runner.arch }}.deb
