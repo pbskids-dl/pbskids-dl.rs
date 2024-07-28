@@ -32,8 +32,6 @@ jobs:
         run: |
           cargo install cargo-deb
           cargo deb
-          sudo apt-get update
-          sudo apt-get install ./target/debian/pbskids-dl*.deb
       - name: Output the result (binary)
         if: matrix.target == 'binary'
         uses: actions/upload-artifact@v4.3.4
@@ -56,7 +54,7 @@ jobs:
           tag_name: unstable
           name: 'Unstable'
           prerelease: true
-          body: 'Unstable release of pbskids-dl.rs for commit ${{ github.sha }}'
+          body: 'Unstable release of pbskids-dl.rs for commit ${{ github.sha }} (SAME ARCH FOR EVERY FILE)'
           files: |
             ./target/release/pbskids-dl
             ./target/debian/pbskids-dl*.deb
