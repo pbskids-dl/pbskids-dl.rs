@@ -21,7 +21,7 @@
             "mediaManagerAsset",
             "drm_enabled"
         ],
-        "selected_video_profile": "mp4-16x9-baseline",
+        "selected_video_profile": "mp4-16x9-720p",
         "video_profile": "profile",
         "script_start_marker": "<script id=\"__NEXT_DATA__\" type=\"application/json\">",
         "script_end_marker": "</script>"
