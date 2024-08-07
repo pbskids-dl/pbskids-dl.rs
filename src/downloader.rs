@@ -2,19 +2,17 @@
     pbskids-dl
     Copyright (C) 2024 The pbskids-dl Team
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 */
 
 use crate::config;
@@ -23,11 +21,24 @@ use isahc::{prelude::Configurable, ResponseExt};
 use serde_json;
 use std::io::{Read, Write};
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) enum ProgressBarMode {
+    Quiet,
+    Console,
+    Graphic { progress_bar: fltk::misc::Progress },
+}
+
+impl From<fltk::misc::Progress> for ProgressBarMode {
+    fn from(progress_bar: fltk::misc::Progress) -> Self {
+        Self::Graphic { progress_bar }
+    }
+}
+
 pub(crate) fn download_video(
     videos: Vec<serde_json::Value>,
     config: config::Config,
     save_filename: String,
-    quiet: bool,
+    mut progress_mode: ProgressBarMode,
 ) -> Result<(), crate::errors::AppError> {
     for video in videos.iter() {
         if video.get(&config.page_config.video_profile).unwrap()
@@ -54,18 +65,25 @@ pub(crate) fn download_video(
             let total_size = response.metrics().unwrap().download_progress().1;
 
             let progress_bar = indicatif::ProgressBar::new(total_size);
-            let style = indicatif::ProgressStyle::default_bar()
-                .progress_chars(&config.download_config.progress_chars)
-                .template(&config.download_config.progress_template)?;
 
-            if !quiet {
-                progress_bar.set_style(style);
+            match progress_mode {
+                ProgressBarMode::Console => {
+                    progress_bar.set_style(
+                        indicatif::ProgressStyle::default_bar()
+                            .progress_chars(&config.download_config.progress_chars)
+                            .template(&config.download_config.progress_template)?,
+                    );
+                }
+                ProgressBarMode::Graphic {
+                    ref mut progress_bar,
+                } => progress_bar.set_maximum(total_size as f64),
+                ProgressBarMode::Quiet => (),
             }
 
             let file = std::fs::File::create(save_filename)?;
             let mut writer = std::io::BufWriter::new(file);
 
-            let mut downloaded: u64 = 0;
+            let mut downloaded = 0;
             let mut buffer = [0u8; 8192]; //8k buffer
 
             loop {
@@ -76,8 +94,12 @@ pub(crate) fn download_video(
 
                 writer.write_all(&buffer[..bytes_read])?;
                 downloaded += bytes_read as u64;
-                if !quiet {
-                    progress_bar.set_position(downloaded);
+                match progress_mode {
+                    ProgressBarMode::Console => progress_bar.set_position(downloaded as u64),
+                    ProgressBarMode::Graphic {
+                        ref mut progress_bar,
+                    } => progress_bar.set_value(downloaded as f64),
+                    ProgressBarMode::Quiet => (),
                 }
             }
             break;

@@ -1,13 +1,21 @@
 [package]
 name = "pbskids-dl"
-version = "3.2.2"
+version = "3.3.0"
 authors = ["pbskids-dl team"]
 description = "A downloader for PBS KIDS videos."
-license = "GPL-2.0-or-later"
+license = "Apache-2.0"
 documentation = "https://github.com/pbskids-dl/pbskids-dl.rs/tree/dev/docs"
 readme = "README.md"
 repository = "https://github.com/pbskids-dl/pbskids-dl.rs"
 edition = "2021"
+
+[[bin]]
+name = "pbskids-dl-gui"
+path = "src/pbskids-dl-gui.rs"
+
+[[bin]]
+name = "pbskids-dl"
+path = "src/pbskids-dl.rs"
 
 [dependencies]
 clap = { version = "4.5.9", features = ["cargo"] }
@@ -15,7 +23,11 @@ serde_json = "1.0.120"
 isahc = "1.7.2"
 indicatif = "0.17.8"
 serde ={version = "1.0.204", features = ["derive"]}
+fltk ={ version = "1.4.33", features = ["fltk-bundled"]}
 cargo-deb = "2.5.1"
+
+[build-dependencies]
+fl2rust = "0.5.19"
 
 [profile.release]
 opt-level = "z"   # Optimize for size.
@@ -26,15 +38,18 @@ codegen-units = 1
 name = "pbskids-dl.rs"
 maintainer = "NexusSfan <nexussfan@duck.com>"
 copyright = "2024, pbskids-dl team"
-license-file = ["LICENSE", "11"]
+license-file = ["LICENSE", "6"]
 depends = "$auto"
 section = "tools"
 priority = "optional"
 conflicts = "pbskids-dl"
 assets = [
     ["target/release/pbskids-dl", "usr/bin/", "755"],
+    ["target/release/pbskids-dl-gui", "usr/bin/", "755"],
     ["target/release/pbskids-dl", "usr/bin/pbskids-dl.rs", "755"],
-    ["config.json", "usr/lib/pbskids-dl.rs/", "644"],
+    ["assets/config.json", "usr/lib/pbskids-dl.rs/", "644"],
+    ["assets/pbskids-dl-gui.desktop", "usr/share/applications/", "644"],
+    ["assets/pbskids-dl-gui.svg", "usr/share/pixmaps/", "644"],
 ]
 extended-description = """\
 Rust version of pbskids-dl"""

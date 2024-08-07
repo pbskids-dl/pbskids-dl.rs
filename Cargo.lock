@@ -206,6 +206,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4b82cf0babdbd58558212896d1a4272303a57bdb245c2bf1147185fb45640e70"
 
 [[package]]
+name = "cmake"
+version = "0.1.50"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a31c789563b815f77f4250caee12365734369f942439b7defd71e18a48197130"
+dependencies = [
+ "cc",
+]
+
+[[package]]
 name = "colorchoice"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -249,6 +258,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a97769d94ddab943e4510d138150169a2758b5ef3eb191a9ee688de3e23ef7b3"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "crossbeam-channel"
+version = "0.5.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "33480d6946193aa8033910124896ca395333cae7e2d1113d1fef6c3272217df2"
+dependencies = [
+ "crossbeam-utils",
 ]
 
 [[package]]
@@ -426,6 +444,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "fl2rust"
+version = "0.5.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f6679204ae2e70ee854f3caea0085fd15bf413baf81aba85422ea3394b00595f"
+dependencies = [
+ "fluid-parser",
+]
+
+[[package]]
 name = "flate2"
 version = "1.0.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -434,6 +461,35 @@ dependencies = [
  "crc32fast",
  "miniz_oxide",
 ]
+
+[[package]]
+name = "fltk"
+version = "1.4.33"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "282d3f9b20cb53f0d468790cdaf7ae28d9128ad52caea5ba1e57fd63e571c081"
+dependencies = [
+ "bitflags 2.6.0",
+ "crossbeam-channel",
+ "fltk-sys",
+ "once_cell",
+ "paste",
+ "ttf-parser",
+]
+
+[[package]]
+name = "fltk-sys"
+version = "1.4.33"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8cab52e0e3abc6be8c9ea81bb7aa7887f1650198c3fc4464c5a59ac996d126d3"
+dependencies = [
+ "cmake",
+]
+
+[[package]]
+name = "fluid-parser"
+version = "0.1.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f8c1235afc20d2380c8c3bd46ab0bd3f8cda366cc19104f0da9cfc25e8fdf728"
 
 [[package]]
 name = "fnv"
@@ -730,11 +786,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bb813b8af86854136c6922af0598d719255ecb2179515e6e7730d468f05c9cae"
 
 [[package]]
+name = "paste"
+version = "1.0.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
+
+[[package]]
 name = "pbskids-dl"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "cargo-deb",
  "clap",
+ "fl2rust",
+ "fltk",
  "indicatif",
  "isahc",
  "serde",
@@ -1127,6 +1191,12 @@ dependencies = [
  "pin-project",
  "tracing",
 ]
+
+[[package]]
+name = "ttf-parser"
+version = "0.24.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8686b91785aff82828ed725225925b33b4fde44c4bb15876e5f7c832724c420a"
 
 [[package]]
 name = "typenum"

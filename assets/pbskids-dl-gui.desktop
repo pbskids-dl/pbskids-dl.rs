@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=pbskids-dl GUI
+GenericName=A downloader for PBS KIDS videos.
+TryExec=pbskids-dl-gui
+Exec=pbskids-dl-gui %F
+Icon=/usr/share/pixmaps/pbskids-dl-gui.svg
+Terminal=false
+Type=Application
+Categories=Tools;

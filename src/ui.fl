@@ -1,0 +1,34 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0308
+header_name {.h}
+code_name {.cxx}
+class UserInterface {open
+} {
+  Function {open_gui()} {open
+  } {
+    Fl_Window {} {
+      label {pbskids-dl.rs GUI} open selected
+      xywh {342 396 645 150} type Double visible
+    } {
+      Fl_Return_Button select_file {
+        label {Save As}
+        xywh {509 19 120 34}
+      }
+      Fl_Input url {
+        label {URL:}
+        xywh {49 19 450 34}
+      }
+      Fl_Progress progress {
+        xywh {14 105 615 34} selection_color 220
+      }
+      Fl_File_Input save_filename {
+        label {Filename (optional):}
+        xywh {149 61 350 34}
+      }
+      Fl_Return_Button download {
+        label Download
+        xywh {509 61 120 34}
+      }
+    }
+  }
+}
