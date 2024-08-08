@@ -18,7 +18,7 @@
 // Default config locations
 const DEFAULT_CONFIG_PATHS: [&str; 2] = [
     "~/.config/pbskids-dl.rs/config.json", //user generated has higher priority
-    "/usr/lib/pbskids-dl.rs/config.json", //package installed location
+    "/etc/pbskids-dl.rs/config.json", //package installed location
 ];
 
 use serde::{Deserialize, Serialize};
